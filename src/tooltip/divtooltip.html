@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Div Tooltip</title>
+    <script src="../../lib/d3/d3.js"></script>
+
+    <style>
+        #tooltip {
+            position: absolute;
+            width: 200px;
+            height: auto;
+            padding: 10px;
+            background-color: white;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            border-radius: 10px;
+            -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+        }
+
+        #tooltip.hidden {
+            display: none;
+        }
+
+        #tooltip p {
+            margin: 0;
+            font-family: sans-serif;
+            font-size: 16px;
+            line-height: 20px;
+        }
+    </style>
+
+</head>
+<body>
+
+<div id="tooltip" class="hidden">
+    <p><strong>Important Label Heading</strong></p>
+    <p><span id="value">100</span></p>
+</div>
+
+<script>
+    var dataset = [];
+    for (var i = 0; i < 20; i += 1) {
+        dataset.push(Math.floor(Math.random() * 30));
+    }
+
+    var w = 500, h = 200;
+
+    var svg = d3.select('body').append('svg')
+            .attr('width', w)
+            .attr('height', h);
+    var xScale = d3.scale.ordinal()
+            .domain(d3.range(dataset.length))
+            .rangeRoundBands([0, w], 0.05);
+
+    var yScale = d3.scale.linear()
+            .domain([0, d3.max(dataset)])
+            .range([0, h]);
+
+    svg.selectAll('rect')
+            .data(dataset)
+            .enter()
+            .append('rect')
+            .attr('x', function (d, i) {
+                return xScale(i);
+            })
+            .attr('y', function (d) {
+                return h - yScale(d);
+            })
+            .attr('width', function (d) {
+                return xScale.rangeBand();
+            })
+            .attr('height', function (d) {
+                return yScale(d);
+            })
+            .attr('fill', 'teal')
+            .on('mouseover', function (d) {
+                var xPosition = parseFloat(d3.select(this).attr('x')) + xScale.rangeBand() / 2;
+                var yPosition = parseFloat(d3.select(this).attr('y')) / 2 + h / 2;
+
+                d3.select('#tooltip')
+                        .style('left', xPosition + 'px')
+                        .style('top', yPosition + 'px')
+                        .select('#value')
+                        .text(d);
+
+                d3.select('#tooltip').classed('hidden', false);
+            })
+            .on('mouseout', function () {
+                d3.select('#tooltip').classed('hidden', true);
+            });
+
+</script>
+</body>
+</html>

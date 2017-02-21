@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Svg Tooltip</title>
+    <script src="../../lib/d3/d3.js"></script>
+</head>
+<body>
+
+<script>
+    var dataset = [];
+    for (var i = 0; i < 20; i += 1) {
+        dataset.push(Math.floor(Math.random() * 30));
+    }
+
+    var w = 500, h = 200;
+
+    var svg = d3.select('body').append('svg')
+            .attr('width', w)
+            .attr('height', h);
+    var xScale = d3.scale.ordinal()
+            .domain(d3.range(dataset.length))
+            .rangeRoundBands([0, w], 0.05);
+
+    var yScale = d3.scale.linear()
+            .domain([0, d3.max(dataset)])
+            .range([0, h]);
+
+    svg.selectAll('rect')
+            .data(dataset)
+            .enter()
+            .append('rect')
+            .attr('x', function (d, i) {
+                return xScale(i);
+            })
+            .attr('y', function (d) {
+                return h - yScale(d);
+            })
+            .attr('width', function (d) {
+                return xScale.rangeBand();
+            })
+            .attr('height', function (d) {
+                return yScale(d);
+            })
+            .attr('fill', 'teal')
+            .on('mouseover', function (d) {
+                var xPosition = parseFloat(d3.select(this).attr('x')) + xScale.rangeBand() / 2;
+                var yPosition = parseFloat(d3.select(this).attr('y')) + 14;
+
+                svg.append('text')
+                        .attr('id', 'tooltip')
+                        .attr('x', xPosition)
+                        .attr('y', yPosition)
+                        .attr('font-family', 'sans-serif')
+                        .attr('font-size', '11px')
+                        .attr('font-weight', 'bold')
+                        .attr('fill', 'white')
+                        .attr('text-anchor', 'middle')
+                        .text(d);
+            })
+            .on('mouseout', function () {
+                d3.select('#tooltip').remove();
+            });
+</script>
+</body>
+</html>

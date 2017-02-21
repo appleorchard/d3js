@@ -36,7 +36,11 @@
             .attr('height', function (d) {
                 return d * 3;
             })
-            .attr('fill', 'teal');
+            .attr('fill', 'teal')
+            .append('title')
+            .text(function (d) {
+                return "This value: " + d;
+            });
 
     svg.selectAll('text')
             .data(dataset)
