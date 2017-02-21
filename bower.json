@@ -1,0 +1,21 @@
+{
+  "name": "D3",
+  "authors": [
+    "dalcong2life <dalcong2life@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "d3": "^3.5.17"
+  }
+}
